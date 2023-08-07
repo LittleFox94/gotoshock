@@ -121,7 +121,7 @@ func (m *Message) SetOperation(op Operation) *Message {
 // so you can use this as a Builder-pattern method.
 //
 // The intensity is capped at 100 by the shockers.
-func (m *Message) SetIntensity(intensity uint8) *Message {
+func (m *Message) SetIntensity(intensity Intensity) *Message {
 	for i := 0; i < 7; i++ {
 		m[25+i] = (intensity >> (7 - i) & 1) == 1
 	}
@@ -210,7 +210,7 @@ func (m Message) GetOperation() (Operation, Operation, error) {
 }
 
 // GetIntensity extracts the intensity from the message.
-func (m Message) GetIntensity() uint8 {
+func (m Message) GetIntensity() Intensity {
 	intensity := 0
 	for i := 0; i < 7; i++ {
 		if m[25+i] {
@@ -218,5 +218,5 @@ func (m Message) GetIntensity() uint8 {
 		}
 	}
 
-	return uint8(intensity)
+	return Intensity(intensity)
 }

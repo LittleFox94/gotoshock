@@ -76,7 +76,7 @@ var _ = Describe("Message", func() {
 			expected := messageFromString(expectedMessage)
 
 			msg := new(types.Message).
-				SetIntensity(uint8(intensity))
+				SetIntensity(types.Intensity(intensity))
 
 			Expect(*msg).To(Equal(expected))
 		},
@@ -93,7 +93,7 @@ var _ = Describe("Message", func() {
 			msg := types.NewMessage().
 				SetChannel(ch).
 				SetOperation(op).
-				SetIntensity(uint8(intensity)).
+				SetIntensity(types.Intensity(intensity)).
 				Build()
 
 			Expect(*msg).To(Equal(expected))
