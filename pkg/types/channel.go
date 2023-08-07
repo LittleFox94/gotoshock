@@ -27,3 +27,18 @@ func (ch Channel) String() string {
 		return fmt.Sprintf("unknown channel (%v)", int(ch))
 	}
 }
+
+// Set takes the given string and parses it into the Channel this method is
+// called on, returning an error if it cannot be parsed.
+func (ch *Channel) Set(s string) error {
+	switch s {
+	case "1":
+		*ch = Channel1
+	case "2":
+		*ch = Channel2
+	default:
+		return ErrUnknownChannel
+	}
+
+	return nil
+}

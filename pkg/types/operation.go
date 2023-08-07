@@ -30,3 +30,20 @@ func (op Operation) String() string {
 		return fmt.Sprintf("unknown operation (%v)", int(op))
 	}
 }
+
+// Set takes the given string and parses it into the Operating this method is
+// called on, returning an error if it cannot be parsed.
+func (op *Operation) Set(s string) error {
+	switch s {
+	case "shock", "zap":
+		*op = OperationShock
+	case "vibrate":
+		*op = OperationVibrate
+	case "beep":
+		*op = OperationBeep
+	default:
+		return ErrUnknownOperation
+	}
+
+	return nil
+}
