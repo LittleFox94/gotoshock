@@ -8,7 +8,7 @@ import (
 )
 
 type softpwm struct {
-	io driver.IODriver
+	io driver.BitstreamDriver
 }
 
 func (s softpwm) Output(m *types.Message) error {
@@ -40,13 +40,13 @@ func (s softpwm) Output(m *types.Message) error {
 	return s.io.Output(bitstring, 250*time.Microsecond)
 }
 
-func (s *softpwm) Bind(io driver.IODriver) error {
+func (s *softpwm) Bind(io driver.BitstreamDriver) error {
 	s.io = io
 	return nil
 }
 
 func init() {
-	driver.RegisterPWM("softpwm", func(args []string) (driver.PWMDriver, error) {
+	driver.RegisterMessage("softpwm", func(args []string) (driver.MessageDriver, error) {
 		return &softpwm{}, nil
 	})
 }

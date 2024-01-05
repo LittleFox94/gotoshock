@@ -39,7 +39,7 @@ func (r raspi_gpio) Output(stream []bool, d time.Duration) error {
 }
 
 func init() {
-	driver.RegisterIO("raspi_gpio", func(args []string) (driver.IODriver, error) {
+	driver.RegisterBitstream("raspi_gpio", func(args []string) (driver.BitstreamDriver, error) {
 		if len(args) != 1 {
 			return nil, errors.New("invalid arguments, needs exactly one argument: pin number to use (BCM2835 pin numbering)")
 		}

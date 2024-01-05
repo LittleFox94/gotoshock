@@ -7,27 +7,27 @@ import (
 	"text/scanner"
 )
 
-var pwmDriverRegistry map[string]PWMDriverFactory
+var messageDriverRegistry map[string]MessageDriverFactory
 
-var ioDriverRegistry map[string]IODriverFactory
+var bitstreamDriverRegistry map[string]BitstreamDriverFactory
 
-func RegisterPWM(name string, fac PWMDriverFactory) {
-	if pwmDriverRegistry == nil {
-		pwmDriverRegistry = make(map[string]PWMDriverFactory)
+func RegisterMessage(name string, fac MessageDriverFactory) {
+	if messageDriverRegistry == nil {
+		messageDriverRegistry = make(map[string]MessageDriverFactory)
 	}
 
-	pwmDriverRegistry[name] = fac
+	messageDriverRegistry[name] = fac
 }
 
-func RegisterIO(name string, fac IODriverFactory) {
-	if ioDriverRegistry == nil {
-		ioDriverRegistry = make(map[string]IODriverFactory)
+func RegisterBitstream(name string, fac BitstreamDriverFactory) {
+	if bitstreamDriverRegistry == nil {
+		bitstreamDriverRegistry = make(map[string]BitstreamDriverFactory)
 	}
 
-	ioDriverRegistry[name] = fac
+	bitstreamDriverRegistry[name] = fac
 }
 
-func Setup(conn string) (PWMDriver, error) {
+func Setup(conn string) (MessageDriver, error) {
 	type driverWithArgs struct {
 		driver string
 		args   []string
@@ -62,26 +62,26 @@ func Setup(conn string) (PWMDriver, error) {
 		return nil, errors.New("invalid driver number")
 	}
 
-	pwmDriverFactory, ok := pwmDriverRegistry[drivers[0].driver]
+	messageDriverFactory, ok := messageDriverRegistry[drivers[0].driver]
 	if !ok {
 		return nil, fmt.Errorf("PWM driver %q not found", drivers[0].driver)
 	}
 
-	pwmDriver, err := pwmDriverFactory(drivers[0].args)
+	messageDriver, err := messageDriverFactory(drivers[0].args)
 	if err != nil {
 		return nil, fmt.Errorf("error initializing PWM driver: %w", err)
 	}
 
 	if len(drivers) == 1 {
-		return pwmDriver, nil
+		return messageDriver, nil
 	}
 
-	bindablePWMDriver, ok := pwmDriver.(BindablePWMDriver)
+	bindableMessageDriver, ok := messageDriver.(BindableMessageDriver)
 	if !ok {
 		return nil, fmt.Errorf("PWM driver %q cannot be bound to another driver", drivers[0].driver)
 	}
 
-	ioDriverFactory, ok := ioDriverRegistry[drivers[1].driver]
+	ioDriverFactory, ok := bitstreamDriverRegistry[drivers[1].driver]
 	if !ok {
 		return nil, fmt.Errorf("I/O driver %q not found", drivers[1].driver)
 	}
@@ -91,6 +91,6 @@ func Setup(conn string) (PWMDriver, error) {
 		return nil, fmt.Errorf("error initializing I/O driver: %w", err)
 	}
 
-	bindablePWMDriver.Bind(ioDriver)
-	return bindablePWMDriver, nil
+	bindableMessageDriver.Bind(ioDriver)
+	return bindableMessageDriver, nil
 }

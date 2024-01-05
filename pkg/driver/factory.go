@@ -1,5 +1,5 @@
 package driver
 
-type PWMDriverFactory func(arguments []string) (PWMDriver, error)
+type BitstreamDriverFactory func(arguments []string) (BitstreamDriver, error)
 
-type IODriverFactory func(arguments []string) (IODriver, error)
+type MessageDriverFactory func(arguments []string) (MessageDriver, error)
